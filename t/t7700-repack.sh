@@ -342,8 +342,9 @@ test_expect_success 'repacking with a filter works' '
 '
 
 test_expect_success '--filter fails with --write-bitmap-index' '
-	GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=0 test_must_fail git -C bare.git repack \
-		-a -d --write-bitmap-index --filter=blob:none
+	test_must_fail \
+		env GIT_TEST_MULTI_PACK_INDEX_WRITE_BITMAP=0 \
+		git -C bare.git repack -a -d --write-bitmap-index --filter=blob:none
 '
 
 test_expect_success 'repacking with two filters works' '
