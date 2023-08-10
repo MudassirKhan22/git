@@ -297,27 +297,17 @@ my %cmd = (
 		{} ],
 );
 
-package FakeTerm;
-sub new {
-	my ($class, $reason) = @_;
-	return bless \$reason, shift;
-}
-sub readline {
-	my $self = shift;
-	die "Cannot use readline on FakeTerm: $$self";
-}
 package main;
 
-my $term;
-sub term_init {
-	$term = eval {
+{
+	my $term;
+	sub term_init {
+		return $term if $term;
 		require Term::ReadLine;
-		$ENV{"GIT_SVN_NOTTY"}
-			? new Term::ReadLine 'git-svn', \*STDIN, \*STDOUT
-			: new Term::ReadLine 'git-svn';
-	};
-	if ($@) {
-		$term = new FakeTerm "$@: going non-interactive";
+		$term = $ENV{"GIT_SVN_NOTTY"}
+				? new Term::ReadLine 'git-svn', \*STDIN, \*STDOUT
+				: new Term::ReadLine 'git-svn';
+		return $term;
 	}
 }
 
@@ -437,7 +427,7 @@ sub ask {
 	my $default = $arg{default};
 	my $resp;
 	my $i = 0;
-	term_init() unless $term;
+	my $term = term_init();
 
 	if ( !( defined($term->IN)
             && defined( fileno($term->IN) )
