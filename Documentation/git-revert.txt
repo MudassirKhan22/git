@@ -142,6 +142,18 @@ EXAMPLES
 	changes. The revert only modifies the working tree and the
 	index.
 
+DISCUSSION
+----------
+
+While git creates a basic commit message automatically, it is
+_strongly_ recommended to explain why the original commit is being
+reverted. In addition, repeatedly reverting the same commit will
+result in increasingly unwieldy subject lines, for example 'Reapply
+"Reapply "<original subject>""'. Please consider rewording such
+subject lines to reflect the reason why the original commit is being
+reapplied again.
+
+
 CONFIGURATION
 -------------
 
